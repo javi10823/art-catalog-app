@@ -7,7 +7,7 @@ import {ThumbnailImage} from '../../components';
 import {Icon} from 'react-native-paper';
 import DetailSkeleton from './DetailSkeleton';
 import Header from './Header';
-import {Button, Tag, TagContainer, styles} from './styles';
+import {Button, Tag, TagContainer, TextTag, styles} from './styles';
 import {RootStackParamList} from '../../types/navigation';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ArtEvent} from '../../types/event';
@@ -100,19 +100,33 @@ const Details = ({route, navigation}: Props) => {
           </View>
         )}
         <TagContainer>
-          {event?.is_free && <Tag favorite>Free</Tag>}
-          {event?.is_registration_required && <Tag>Registration Required</Tag>}
-          {event?.is_member_exclusive && <Tag>Exclusive</Tag>}
+          {event?.is_free && (
+            <Tag favorite>
+              <TextTag>Free</TextTag>
+            </Tag>
+          )}
+          {event?.is_registration_required && (
+            <Tag>
+              <TextTag>Registration Required</TextTag>
+            </Tag>
+          )}
+          {event?.is_member_exclusive && (
+            <Tag>
+              <TextTag>Exclusive</TextTag>
+            </Tag>
+          )}
 
-          <Tag>{event?.is_private ? 'Private' : 'Public'}</Tag>
+          <Tag>
+            <TextTag>{event?.is_private ? 'Private' : 'Public'}</TextTag>
+          </Tag>
 
-          {event?.is_virtual && <Tag>Virtual</Tag>}
+          {event?.is_virtual && (
+            <Tag>
+              <TextTag>Virtual</TextTag>
+            </Tag>
+          )}
         </TagContainer>
         <View style={styles.buttonsContainer}>
-          <Button onPress={() => {}}>
-            <Text style={styles.buttonText}>Add to Calendar</Text>
-            <Icon source="calendar-import" size={20} color="white" />
-          </Button>
           {event?.buy_button_text && (
             <Button onPress={onBuy}>
               <Text style={styles.buttonText}>{event.buy_button_text}</Text>

@@ -5,18 +5,21 @@ export const TagContainer = styled.View`
   flex-direction: row;
   gap: 8px;
   flex-wrap: wrap;
-  padding-top: 8;
+  padding-top: 8px;
 `;
 
-export const Tag = styled.Text<{favorite?: boolean}>`
+export const Tag = styled.View<{favorite?: boolean}>`
   border-radius: 16px;
   height: 24px;
-  line-height: 24px;
   padding: 0 16px;
   background-color: ${({favorite}) => (favorite ? '#D0B83E' : '#707070')};
-  text-align: center;
-  font-weight: 600;
+`;
+
+export const TextTag = styled.Text`
   color: white;
+  font-weight: 600;
+  text-align: center;
+  line-height: 24px;
 `;
 
 export const Button = styled.TouchableOpacity`
@@ -45,7 +48,7 @@ export const styles = StyleSheet.create({
     marginTop: 16,
   },
   buttonsContainer: {
-    flexDirection: 'row',
+    flexDirection: 'row-reverse',
     justifyContent: 'space-between',
     marginTop: 16,
   },

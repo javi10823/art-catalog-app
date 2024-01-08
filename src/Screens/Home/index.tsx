@@ -23,7 +23,6 @@ const Home = ({navigation}: Props) => {
   const [favorites, setFavorites] = useState<ArtEvent[]>();
   const [showFavorites, setShowFavorites] = useState(false);
   const [loading, setLoading] = useState(false);
-  console.log(API_URL);
 
   useEffect(() => {
     setLoading(true);
