@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {Dimensions, Linking, ScrollView, Text, View} from 'react-native';
+import {Alert, Dimensions, Linking, ScrollView, Text, View} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import HTML from 'react-native-render-html';
@@ -11,6 +11,8 @@ import {Button, Tag, TagContainer, TextTag, styles} from './styles';
 import {RootStackParamList} from '../../types/navigation';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {ArtEvent} from '../../types/event';
+import {NativeModules, PermissionsAndroid} from 'react-native';
+const {MyCalendarModule} = NativeModules;
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Details'>;
 
@@ -18,6 +20,42 @@ const Details = ({route, navigation}: Props) => {
   const [event, setEvent] = useState<any>();
   const [loading, setLoading] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
+
+  const addEventToCalendar = async () => {
+    const title = event.title;
+    const location = event.location || 'Unspecified';
+    const startDate = new Date(event.start_date).getTime();
+    const endDate = new Date(event.end_date).getTime();
+
+    try {
+      const readPermission = PermissionsAndroid.PERMISSIONS.READ_CALENDAR;
+      const writePermission = PermissionsAndroid.PERMISSIONS.WRITE_CALENDAR;
+
+      const readGranted = await PermissionsAndroid.request(readPermission);
+      const writeGranted = await PermissionsAndroid.request(writePermission);
+
+      if (
+        readGranted === PermissionsAndroid.RESULTS.GRANTED &&
+        writeGranted === PermissionsAndroid.RESULTS.GRANTED
+      ) {
+        MyCalendarModule.addEvent(
+          title,
+          location,
+          startDate,
+          endDate,
+          (error: any) => {
+            if (error) {
+              Alert.alert('Error adding event:', error.message);
+            } else {
+              Alert.alert('Event added successfully.');
+            }
+          },
+        );
+      }
+    } catch (error: any) {
+      Alert.alert('Error requesting calendar permissions', error?.message);
+    }
+  };
 
   useEffect(() => {
     if (route.params) {
@@ -127,6 +165,10 @@ const Details = ({route, navigation}: Props) => {
           )}
         </TagContainer>
         <View style={styles.buttonsContainer}>
+          <Button onPress={addEventToCalendar}>
+            <Text style={styles.buttonText}>Add to Calendar</Text>
+            <Icon source="calendar-import" size={20} color="white" />
+          </Button>
           {event?.buy_button_text && (
             <Button onPress={onBuy}>
               <Text style={styles.buttonText}>{event.buy_button_text}</Text>

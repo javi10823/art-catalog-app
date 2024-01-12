@@ -48,7 +48,7 @@ export const styles = StyleSheet.create({
     marginTop: 16,
   },
   buttonsContainer: {
-    flexDirection: 'row-reverse',
+    flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 16,
   },
